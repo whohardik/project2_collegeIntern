@@ -14,13 +14,13 @@ const createCollege = async function (req, res){
             })
          }
 
-         if ((typeof(data.name) != "string") || !data.name.match(/^[a-z]+$/)) {
+         if ((typeof(data.name) != "string") || !data.name.match(/^[a-zA-Z]+$/)) {
             return res.status(400).send({
                 status: false,
-                msg: "College Name is Missing or should contain only lowercase alphabets"
+                msg: "College Name is Missing or should contain only alphabets"
             })
         }
-        let checkName = await CollegeModel.findOne({name : data.name})
+        let checkName = await CollegeModel.findOne({name : data.name, isDeleted : false})
         if(checkName && checkName.isDeleted == false){
             return res.status(400).send({
                 status : false,
@@ -28,7 +28,7 @@ const createCollege = async function (req, res){
             })
         }
 
-        if ((typeof(data.fullName) != "string")|| !data.fullName.match(/^[a-zA-Z][a-zA-Z ]+[a-zA-Z]+$/)){
+        if ((typeof(data.fullName) != "string")|| !data.fullName.match(/^[a-zA-Z][a-zA-Z, ]+[a-zA-Z]+$/)){
             return res.status(400).send({
                 status: false,
                 msg: "College Full Name is Missing or should contain alphabets"
@@ -72,7 +72,7 @@ const createCollege = async function (req, res){
 
     }
     catch(err){
-        console.log("Error is From login :", err.message)
+        console.log("Error is From Creating College :", err.message)
         res.status(500).send({
             status : false,
             msg : err.message
@@ -83,10 +83,10 @@ const createCollege = async function (req, res){
 const getCollegeIntern = async function (req, res){
     try{
      let collegeName = req.query.collegeName
-     if(!collegeName){
+     if((typeof(collegeName) != "string") || !collegeName.match(/^[a-z]+$/)){
        return res.status(400).send({
             status : false,
-            msg : "Please Provide the collegeName"
+            msg : "College name missing or provide data in lower case alphabets"
         })
      }
     let details = await CollegeModel.findOne({name : collegeName, isDeleted : false})
@@ -119,7 +119,7 @@ const getCollegeIntern = async function (req, res){
 
     }
     catch(err){
-        console.log("Error is From login :", err.message)
+        console.log("Error is From Get Colleges :", err.message)
         res.status(500).send({
             status : false,
             msg : err.message
