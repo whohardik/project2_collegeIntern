@@ -97,7 +97,7 @@ const getCollegeIntern = async function (req, res){
         })
     }
     let id = details._id
-    let names = await InternModel.find({collegeId : id}).select({name : 1, email : 1, mobile : 1 })
+    let names = await InternModel.find({collegeId : id, isDeleted : false}).select({name : 1, email : 1, mobile : 1 })
     if(!names){
         return res.status(404).send({
             status : false,
