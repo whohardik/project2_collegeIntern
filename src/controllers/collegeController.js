@@ -1,5 +1,5 @@
 const CollegeModel = require("../models/collegeModel")
-const URL = require("url")
+const isValidURL = require("valid-url")
 
 //--------------------Handler For Creating College-----------------------------//
 const createCollege = async function (req, res){
@@ -33,14 +33,13 @@ const createCollege = async function (req, res){
                 msg: "College Full Name is Missing or should contain alphabets"
             })
         }
-        const stringIsAValidUrl = (s) => {
-            try {
-              new URL(s);
-              return true;
-            } catch (err) {
-              return false;
-            }
-          };
+
+        
+        const stringIsAValidUrl = (url) => {
+         return (isValidURL.isUri(url)) ? true : false 
+        };
+
+
         if(typeof(data.logoLink) != "string"){
             return res.status(400).send({
                 status : false,
