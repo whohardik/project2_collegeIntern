@@ -2,7 +2,7 @@ const CollegeModel = require("../models/collegeModel")
 const InternModel = require("../models/internModel")
 const validator = require("email-validator")
 
-//--------------------Handler For Creating College-----------------------------//
+//--------------------Handler For Creating Intern-----------------------------//
 const createIntern = async function (req, res){
     try{
         let data = req.body
@@ -33,7 +33,7 @@ const createIntern = async function (req, res){
             })
         }
         //Checks For Unique Email Id
-        let checkEmail = await InternModel.findOne({ email: data.email })
+        let checkEmail = await InternModel.findOne({ email: data.email , isDeleted : false})
         if (checkEmail) {
             return res.status(400).send({
                 status: false,
@@ -41,13 +41,13 @@ const createIntern = async function (req, res){
             })
         }
 
-        if ((typeof(data.collegeName) != "string")) {
+        if ((typeof(data.collegeName) != "string")|| !data.collegeName.match(/^[a-z]+$/)) {
             return res.status(400).send({
                 status: false,
-                msg: "College Name is Missing or has invalid input"
+                msg: "College Name is Missing or should be in lower case only"
             })
         }
-        let college = await CollegeModel.findOne({name : data.collegeName})
+        let college = await CollegeModel.findOne({name : data.collegeName, isDeleted: false})
         if(!college){
            return res.status(400).send({
                 status : false,
@@ -55,7 +55,7 @@ const createIntern = async function (req, res){
             })
         }
 
-        if((typeof(data.mobile) != "string") || !data.mobile.match(/^(?:(?:\+|0{0,2})91(\s*[\-]\s*)?|[0]?)?[6789]\d{9}$/)){
+        if((typeof(data.mobile) != "string") || !data.mobile.match(/^[6-9]\d{9}$/)){
           return  res.status(400).send({
                 status : false,
                 msg : "Not a valid Mobile Number"  
@@ -84,7 +84,7 @@ const createIntern = async function (req, res){
         })  
    }
     (typeof(data.isDeleted) == "undefined") ? query.isDeleted = false : query.isDeleted = data.isDeleted
-       console.log(query)
+       
     let savedData = await InternModel.create(query)
     res.status(201).send({
         status : true,
@@ -94,7 +94,7 @@ const createIntern = async function (req, res){
 
     }
     catch(err){
-        console.log("Error is From login :", err.message)
+        console.log("Error is From Creating Intern :", err.message)
         res.status(500).send({
             status : false,
             msg : err.message
