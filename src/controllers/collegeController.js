@@ -1,4 +1,5 @@
 const CollegeModel = require("../models/collegeModel")
+const InternModel = require("../models/internModel")
 const isValidURL = require("valid-url")
 
 //--------------------Handler For Creating College-----------------------------//
@@ -79,4 +80,52 @@ const createCollege = async function (req, res){
     }
 } 
 
+const getCollegeIntern = async function (req, res){
+    try{
+     let collegeName = req.query.collegeName
+     if(!collegeName){
+        res.status(400).send({
+            status : false,
+            msg : "Please Provide the collegeName"
+        })
+     }
+    let details = await CollegeModel.findOne({name : collegeName, isDeleted : false})
+    if(!details){
+        return res.status(400).send({
+            status : false,
+            msg : "Invalid  College Name"
+        })
+    }
+    let id = details._id
+    let names = await InternModel.find({collegeId : id}).select({name : 1, email : 1, mobile : 1 })
+    if(!names){
+        return res.status(404).send({
+            status : false,
+            msg : "No intern with this college Id"
+        })
+    } 
+
+    let displayingData = {
+        name : details.name,
+        fullName : details.fullName,
+        logoLink : details.logoLink,
+        interns : names
+    }
+
+    res.status(200).send({
+        status : true,
+        data : displayingData
+    })
+
+    }
+    catch(err){
+        console.log("Error is From login :", err.message)
+        res.status(500).send({
+            status : false,
+            msg : err.message
+        })
+    }
+}
+
 module.exports.createCollege =createCollege
+module.exports.getCollegeIntern = getCollegeIntern

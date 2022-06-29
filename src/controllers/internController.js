@@ -17,7 +17,7 @@ const createIntern = async function (req, res){
          if ((typeof(data.name) != "string") || !data.name.match(/^[a-zA-Z][a-zA-Z ]+[a-zA-Z]+$/)) {
             return res.status(400).send({
                 status: false,
-                msg: "Intern Name is Missing or should contain only lowercase alphabets"
+                msg: "Intern Name is Missing or should contain only alphabets"
             })
         }
         if ((typeof(data.email) != "string")) {
@@ -76,7 +76,7 @@ const createIntern = async function (req, res){
         mobile : data.mobile,
         collegeId : college._id
       }
-      console.log(typeof(data.isDeleted) != "undefined")
+ 
       if(typeof(data.isDeleted) != "undefined" && typeof(data.isDeleted) != "boolean"){
         return res.status(400).send({
             status : false,
