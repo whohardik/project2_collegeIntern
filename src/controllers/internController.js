@@ -76,7 +76,7 @@ const createIntern = async function (req, res){
         mobile : data.mobile,
         collegeId : college._id
       }
-      console.log(typeof(data.isDeleted) != "undefined")
+      //console.log(typeof(data.isDeleted) != "undefined")
       if(typeof(data.isDeleted) != "undefined" && typeof(data.isDeleted) != "boolean"){
         return res.status(400).send({
             status : false,
