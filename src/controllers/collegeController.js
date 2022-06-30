@@ -41,7 +41,7 @@ const createCollege = async function (req, res){
         };
 
 
-        if(typeof(data.logoLink) != "string"){
+        if(typeof(data.logoLink) != "string" || data.logoLink.trim().length==0){
             return res.status(400).send({
                 status : false,
                 msg : "Logo Link is missing or has some invalid input"
