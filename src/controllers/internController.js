@@ -20,7 +20,7 @@ const createIntern = async function (req, res){
                 msg: "Intern Name is Missing or should contain only alphabets"
             })
         }
-        if ((typeof(data.email) != "string")) {
+        if ((typeof(data.email) != "string") || data.email.trim().length==0) {
             return res.status(400).send({
                 status: false,
                 msg: "Email is Missing or has invalid input"
