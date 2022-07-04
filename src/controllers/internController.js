@@ -4,9 +4,10 @@ const validator = require("email-validator")
 
 //--------------------Handler For Creating Intern-----------------------------//
 const createIntern = async function (req, res){
+    res.setHeader('Access-Control-Allow-Origin','*')
     try{
         let data = req.body
-
+    console.log(req.files)
         if(Object.keys(data).length == 0){
             return res.status(400).send({
              status: false,
